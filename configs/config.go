@@ -6,9 +6,13 @@ import (
 )
 
 type conf struct {
-	JWTSecret    string `mapstructure:"JWT_SECRET"`
-	JwtExperesIn int    `mapstructure:"JWT_EXPIRESIN"`
-	TokenAuth    *jwtauth.JWTAuth
+	RateLimitToken     int    `mapstructure:"RATE_LIMIT_TOKEN"`
+	RateLimitTokenTime int    `mapstructure:"RATE_LIMIT_TOKEN_TIME"`
+	RateLimitIp        int    `mapstructure:"RATE_LIMIT_IP"`
+	RateLimitIpTime    int    `mapstructure:"RATE_LIMIT_IP_TIME"`
+	JWTSecret          string `mapstructure:"JWT_SECRET"`
+	JwtExperesIn       int    `mapstructure:"JWT_EXPIRESIN"`
+	TokenAuth          *jwtauth.JWTAuth
 }
 
 func LoadConfig(path string) (*conf, error) {

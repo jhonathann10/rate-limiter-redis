@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -40,8 +41,10 @@ func main() {
 	r.Use(middleware.WithValue("jwt", config.TokenAuth))
 	r.Use(middleware.WithValue("JwtExperesIn", config.JwtExperesIn))
 
-	// Transformar o time.Second e o burst em variáveis de ambiente
-	rateLimiter := middleware2.NewRateLimiter(30*time.Second, 5)
+	rateLimiter := middleware2.NewRateLimiter(
+		time.Duration(config.RateLimitTokenTime)*time.Second, time.Duration(config.RateLimitIpTime)*time.Second,
+		config.RateLimitToken, config.RateLimitIp,
+	)
 
 	r.Route("/user", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(config.TokenAuth))
@@ -52,5 +55,6 @@ func main() {
 	})
 	r.Post("/generate_token", handler.GetJWT)
 
+	log.Println("Server running on port 8080")
 	http.ListenAndServe(":8080", r)
 }
